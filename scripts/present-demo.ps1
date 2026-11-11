@@ -1,6 +1,7 @@
 #requires -Version 7.0
 <#
-Interactive presenter walkthrough. Run in a real VS Code terminal.
+Interactive presenter walkthrough. Requires PowerShell 7, not Windows PowerShell 5.1.
+Use start-presenter.cmd for a dedicated presenter window separate from VS Code.
 PrepareOnly renders the local prompt without changing Git or using the clipboard.
 ResumeAfterGeneration starts at PRD review; NoPublish stops before Git changes.
 The script never invokes Copilot, accepts a EULA, or retrieves tenant content.

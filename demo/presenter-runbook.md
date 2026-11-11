@@ -6,12 +6,21 @@ Clone and configure your **working demo repository**, not the reusable source
 kit, using the [two-repository starter instructions](../README.md#two-repositories-two-responsibilities).
 All terminal steps below are consolidated in
 [scripts/present-demo.ps1](../scripts/present-demo.ps1), including narration and
-keypress pauses. Run in an interactive VS Code terminal with PowerShell 7:
+keypress pauses. **Recommended: launch a dedicated PowerShell 7 window** so
+Copilot stays in VS Code and the presenter output has its own screen. From the
+working demo checkout, run this in any terminal, including Windows PowerShell:
 
 ```powershell
 # Full session: whiteboards -> Copilot -> wait -> review -> validate -> draft PR.
-.\scripts\present-demo.ps1 -Repository OWNER/workiq-northstar-demo
+.\scripts\start-presenter.cmd -Repository OWNER/workiq-northstar-demo
 ```
+
+The [Windows launcher](../scripts/start-presenter.cmd) explicitly selects
+`pwsh.exe`, skips profiles, and keeps the new window open when the script ends
+or fails. It does not change or bypass execution policy. `code .` opens VS Code
+but does not guarantee its terminal is PowerShell 7. **Do not run the `.ps1`
+directly in Windows PowerShell 5.1.** If `pwsh.exe` is unavailable, install the
+approved PowerShell 7 release before rehearsing.
 
 Replace OWNER with the intended GitHub owner. A fresh timestamped specification
 branch is chosen automatically; use `-Branch spec/my-session` if desired.
@@ -39,12 +48,17 @@ complete. Press `Ctrl+C` to stop; no destructive cleanup is performed.
 
 ```powershell
 # Review only: no branch, stage, commit, push, or PR.
-.\scripts\present-demo.ps1 -ResumeAfterGeneration -NoPublish
+.\scripts\start-presenter.cmd -ResumeAfterGeneration -NoPublish
 
 # Review, then explicitly confirm publication in the correct working repo.
-.\scripts\present-demo.ps1 -ResumeAfterGeneration `
-  -Repository OWNER/workiq-northstar-demo
+.\scripts\start-presenter.cmd -ResumeAfterGeneration -Repository OWNER/workiq-northstar-demo
 ```
+
+If you prefer an existing **PowerShell 7** window, run the same options through
+`.\scripts\present-demo.ps1` directly. From a different shell, explicitly use
+`pwsh -NoProfile -File .\scripts\present-demo.ps1` followed by those options.
+If scripts remain blocked in PowerShell 7, inspect `Get-ExecutionPolicy -List`
+and use your organization's approved policy; do not disable controls to demo.
 
 Disclose that generation occurred earlier. A sanitized recorded result is
 labeled **SANITIZED REHEARSAL COPY**; its replacement public-source links are

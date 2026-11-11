@@ -113,11 +113,27 @@ renders the prompt locally; Copilot does **not** resolve `.env` references.
 Rendered prompts contain source links, so do not upload them or commit them.
 Generated PRDs can also contain tenant citations and need a publication review.
 
-From the working copy's VS Code PowerShell 7 terminal:
+**Recommended on Windows: use a dedicated PowerShell 7 presenter window.**
+Keep VS Code open for Copilot, then run this launcher from the working copy
+in any existing terminal (including Windows PowerShell 5.1 or VS Code):
 
 ```powershell
-.\scripts\present-demo.ps1 -Repository OWNER/workiq-northstar-demo
+.\scripts\start-presenter.cmd -Repository OWNER/workiq-northstar-demo
 ```
+
+The launcher explicitly starts `pwsh.exe` (PowerShell 7) in a separate window,
+with profiles skipped and the working folder set to this checkout. It leaves
+the window open after completion or errors. Switch between the whiteboards,
+VS Code/Copilot, and this presenter window as prompted. `code .` opens the
+editor only; it does **not** select PowerShell 7 for its integrated terminal.
+Depending on Windows settings, the dedicated window may be hosted by Windows
+Terminal or the console host.
+
+**Windows PowerShell 5.1 (`powershell.exe`) cannot run this walkthrough.**
+If `pwsh.exe` is missing, install your organization's approved PowerShell 7
+release and reopen your terminal. The launcher does not bypass execution policy
+or change security settings. If PowerShell 7 also blocks scripts, inspect
+`Get-ExecutionPolicy -List` there and follow your organization's guidance.
 
 The script walks from whiteboard story to the rendered Copilot prompt, pauses
 while you generate the PRD, then displays the decision, acceptance criteria,
@@ -129,6 +145,13 @@ agent silently generates or approves the document.
 Useful entry points:
 
 ```powershell
+# Dedicated window, starting from an existing generated result.
+.\scripts\start-presenter.cmd -ResumeAfterGeneration -Repository OWNER/workiq-northstar-demo
+
+# Dedicated review-only window; no Git mutations.
+.\scripts\start-presenter.cmd -ResumeAfterGeneration -NoPublish
+
+# Direct invocation below requires an already-open PowerShell 7 terminal.
 # Render only; no clipboard, Git mutation, retrieval, or publishing.
 .\scripts\present-demo.ps1 -PrepareOnly
 
@@ -139,6 +162,17 @@ Useful entry points:
 .\scripts\present-demo.ps1 -ResumeAfterGeneration `
   -Repository OWNER/workiq-northstar-demo
 ```
+
+For direct invocation from another shell, explicitly select PowerShell 7:
+
+```powershell
+pwsh -NoProfile -File .\scripts\present-demo.ps1 -ResumeAfterGeneration -NoPublish
+```
+
+In VS Code, **Terminal: Select Default Profile > PowerShell** selects PowerShell
+7 when installed; avoid **Windows PowerShell**. Check
+`$PSVersionTable.PSVersion.Major` is at least 7. A dedicated window is preferable
+for projecting the walkthrough's longer output.
 
 Before creating a branch the script verifies the destination, default branch,
 unused branch name, and a one-file working-tree change. It stops on command
@@ -189,6 +223,7 @@ and content discoverability can take longer than the presentation.
 | [demo/fallback/intelligent-escalation-prd.expected.md](demo/fallback/intelligent-escalation-prd.expected.md) | Labeled example for rehearsal or disclosed recovery, with nonfunctional example source URLs. |
 | [scripts/validate-prd.ps1](scripts/validate-prd.ps1) | Lightweight structural checks; not verification of source accuracy. |
 | [scripts/present-demo.ps1](scripts/present-demo.ps1) | Paused terminal walkthrough, from whiteboard story to confirmed draft PR. Requires PowerShell 7. |
+| [scripts/start-presenter.cmd](scripts/start-presenter.cmd) | Windows launcher: opens a dedicated PowerShell 7 presenter window, separate from VS Code, without loading profiles or overriding execution policy. |
 | [demo/diagrams/](demo/diagrams/) | Three executive whiteboard PNGs for opening, decision reconciliation, and human review. |
 | [demo/draft-pr-body.md](demo/draft-pr-body.md) | Starting description for the draft PR; update it to reflect what actually happened. |
 | [demo/presenter-runbook.md](demo/presenter-runbook.md) | Screen-by-screen live actions, narration, checkpoints, and recovery steps. |
